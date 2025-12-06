@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFO STOK RAYAP ONLINE</title>
+    <title>RAYAP ONLINE</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,7 +23,7 @@
                         secondary: '#4facfe'
                     },
                     fontSize: {
-                        'xxs': '0.55rem', // Font super kecil untuk HP
+                        'xxs': '0.55rem', 
                     }
                 }
             }
@@ -53,7 +53,7 @@
         
         <header class="flex justify-between items-center glass-panel p-3 rounded-lg border-b-2 border-secondary sticky top-0 z-50 bg-[#0b1120]">
             <div>
-                <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">RAYAP ONLINE</h1>
+                <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">DAFTAR STOK RAYAP ONLINE</h1>
             </div>
             <div class="flex gap-2">
                 <input type="text" x-model="searchQuery" placeholder="Cari..." 
@@ -68,12 +68,12 @@
             <button @click="switchTab('circles')" 
                 :class="currentTab === 'circles' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
                 class="flex-1 py-2 rounded text-xs uppercase tracking-wider transition-all border border-white/5">
-                Circle (5 Col)
+                Circle
             </button>
             <button @click="switchTab('regulers')" 
                 :class="currentTab === 'regulers' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
                 class="flex-1 py-2 rounded text-xs uppercase tracking-wider transition-all border border-white/5">
-                Reguler (4 Col)
+                AKRAB XDA
             </button>
         </div>
 
@@ -98,12 +98,13 @@
                         <div class="mb-1">
                             <div class="flex justify-between items-start">
                                 <h3 @click="copyText(item.config)" 
-                                    class="text-[9px] md:text-xs font-bold text-white cursor-pointer truncate w-full" 
+                                    class="text-[9px] md:text-xs font-bold text-white cursor-pointer truncate w-full hover:text-accent" 
                                     :title="item.config">
                                     <span x-text="item.config"></span>
                                 </h3>
                             </div>
-                            <div :class="item.count > 5 ? 'text-emerald-400' : 'text-red-400'" 
+                            
+                            <div :class="item.count > 0 ? 'text-emerald-400' : 'text-red-500'" 
                                  class="text-[8px] md:text-[10px] font-bold mt-0.5">
                                 Stok: <span x-text="item.count"></span>
                             </div>
@@ -134,7 +135,7 @@
             </div>
 
             <div x-show="!isLoading && !error && filteredData.length === 0" class="text-center py-10 text-gray-600 text-xs">
-                Kosong
+                Data Kosong
             </div>
         </main>
 
