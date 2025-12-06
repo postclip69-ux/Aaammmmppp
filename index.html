@@ -2,14 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RAYAP ONLINE</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <script>
@@ -18,12 +17,16 @@
                 extend: {
                     fontFamily: { sans: ['Space Grotesk', 'sans-serif'] },
                     colors: {
-                        glass: 'rgba(17, 25, 40, 0.9)',
+                        glass: 'rgba(17, 25, 40, 0.95)', /* Lebih gelap biar solid */
                         accent: '#00f2fe',
-                        secondary: '#4facfe'
+                        secondary: '#4facfe',
+                        bgDark: '#050910' /* Warna latar belakang luar */
                     },
                     fontSize: {
                         'xxs': '0.55rem', 
+                    },
+                    screens: {
+                        'xs': '480px', /* Batas kunci lebar HP */
                     }
                 }
             }
@@ -31,59 +34,61 @@
     </script>
 
     <style>
+        /* Background luar (hitam pekat) */
         body {
-            background-color: #0b1120;
+            background-color: #000000; 
             color: #e2e8f0;
             min-height: 100vh;
+            /* Flexbox biar container selalu di tengah layar besar */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
+
+        /* Container "Aplikasi" yang dikunci lebarnya */
+        #mobile-app-container {
+            width: 100%;
+            max-width: 480px; /* INI KUNCINYA: Maksimal lebar 480px (ukuran HP) */
+            background-color: #0b1120;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1); /* Efek bayangan biar keren di desktop */
+        }
+
         .glass-panel {
             background: rgba(30, 41, 59, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(8px);
         }
         
-        /* Animasi Muncul (Pop In) */
+        /* Animasi */
         @keyframes popIn {
             0% { transform: scale(0); opacity: 0; }
             80% { transform: scale(1.2); opacity: 1; }
             100% { transform: scale(1); opacity: 1; }
         }
-        .check-anim-entry {
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+        .check-anim-entry { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        /* Animasi Glow Hijau (Checkmark) */
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 5px rgba(52, 211, 153, 0.5); border-color: rgba(52, 211, 153, 0.3); }
             50% { box-shadow: 0 0 15px rgba(52, 211, 153, 1); border-color: rgba(52, 211, 153, 0.8); }
         }
-        .glow-active {
-            animation: pulseGlow 2s infinite ease-in-out;
-        }
+        .glow-active { animation: pulseGlow 2s infinite ease-in-out; }
 
-        /* Animasi Merah Berkedip (Red Pulse Text) */
         @keyframes pulseRedText {
-            0%, 100% { 
-                opacity: 0.5; 
-                text-shadow: 0 0 2px rgba(239, 68, 68, 0.2); 
-            }
-            50% { 
-                opacity: 1; 
-                text-shadow: 0 0 8px rgba(239, 68, 68, 0.9); 
-            }
+            0%, 100% { opacity: 0.5; text-shadow: 0 0 2px rgba(239, 68, 68, 0.2); }
+            50% { opacity: 1; text-shadow: 0 0 8px rgba(239, 68, 68, 0.9); }
         }
-        .text-glow-red {
-            animation: pulseRedText 1.5s infinite ease-in-out;
-        }
+        .text-glow-red { animation: pulseRedText 1.5s infinite ease-in-out; }
 
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
 
-<body class="p-2" x-data="stockApp()">
+<body>
 
-    <div class="max-w-full mx-auto space-y-4">
+    <div id="mobile-app-container" class="p-2 space-y-4" x-data="stockApp()">
         
         <header class="flex justify-between items-center glass-panel p-3 rounded-lg border-b-2 border-secondary sticky top-0 z-50 bg-[#0b1120]">
             <div>
@@ -91,8 +96,8 @@
             </div>
             <div class="flex gap-2">
                 <input type="text" x-model="searchQuery" placeholder="Cari..." 
-                    class="py-1 px-3 rounded bg-slate-800 border border-slate-600 text-xs w-24 focus:w-32 transition-all outline-none">
-                <button @click="fetchData()" class="p-1.5 px-3 rounded bg-slate-700 text-white text-xs">
+                    class="py-1 px-3 rounded bg-slate-800 border border-slate-600 text-[10px] w-20 focus:w-28 transition-all outline-none">
+                <button @click="fetchData()" class="p-1.5 px-3 rounded bg-slate-700 text-white text-[10px]">
                     <i class="fa-solid fa-sync" :class="{'fa-spin': isLoading}"></i>
                 </button>
             </div>
@@ -101,12 +106,12 @@
         <div class="flex gap-2">
             <button @click="switchTab('circles')" 
                 :class="currentTab === 'circles' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
-                class="flex-1 py-2 rounded text-xs uppercase tracking-wider transition-all border border-white/5">
+                class="flex-1 py-2 rounded text-[10px] uppercase tracking-wider transition-all border border-white/5">
                 Circle
             </button>
             <button @click="switchTab('regulers')" 
                 :class="currentTab === 'regulers' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
-                class="flex-1 py-2 rounded text-xs uppercase tracking-wider transition-all border border-white/5">
+                class="flex-1 py-2 rounded text-[10px] uppercase tracking-wider transition-all border border-white/5">
                 AKRAB XDA
             </button>
         </div>
@@ -131,27 +136,27 @@
                         
                         <template x-if="item.count > 0">
                             <div class="absolute top-0 right-0 p-1 z-10 check-anim-entry">
-                                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] md:text-xs bg-slate-900 rounded-full border border-emerald-500/50 glow-active"></i>
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] bg-slate-900 rounded-full border border-emerald-500/50 glow-active"></i>
                             </div>
                         </template>
 
                         <div class="mb-1 pr-3">
                             <div class="flex justify-between items-start">
                                 <h3 @click="copyText(item.config)" 
-                                    class="text-[9px] md:text-xs font-bold text-white cursor-pointer truncate w-full hover:text-accent" 
+                                    class="text-[9px] font-bold text-white cursor-pointer truncate w-full hover:text-accent" 
                                     :title="item.config">
                                     <span x-text="item.config"></span>
                                 </h3>
                             </div>
                             
                             <div :class="item.count > 0 ? 'text-emerald-400' : 'text-red-500'" 
-                                 class="text-[8px] md:text-[10px] font-bold mt-0.5 flex items-center gap-1">
+                                 class="text-[8px] font-bold mt-0.5 flex items-center gap-1">
                                 Stok: <span x-text="item.count"></span>
                             </div>
 
                             <template x-if="item.count === 0">
                                 <div class="mt-0.5">
-                                    <p class="text-[6px] md:text-[8px] text-red-500 font-bold italic text-glow-red leading-tight">
+                                    <p class="text-[6px] text-red-500 font-bold italic text-glow-red leading-tight">
                                         BELUM TERSEDIA/HABIS
                                     </p>
                                 </div>
@@ -162,7 +167,7 @@
                             <template x-if="isObject(item.quota_allocation)">
                                 <div class="space-y-0.5">
                                     <template x-for="(val, key) in item.quota_allocation">
-                                        <div class="flex justify-between items-center text-[7px] md:text-[9px]">
+                                        <div class="flex justify-between items-center text-[7px]">
                                             <span class="text-gray-500 truncate max-w-[25px]" x-text="key"></span>
                                             <span class="text-accent font-mono" x-text="val + ' GB'"></span>
                                         </div>
@@ -172,7 +177,7 @@
 
                             <template x-if="!isObject(item.quota_allocation)">
                                 <div class="text-center">
-                                    <span class="text-[10px] md:text-sm font-bold text-gray-200" x-text="item.quota_allocation"></span> 
+                                    <span class="text-[10px] font-bold text-gray-200" x-text="item.quota_allocation"></span> 
                                     <span class="text-[7px] text-gray-500">GB</span>
                                 </div>
                             </template>
