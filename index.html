@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMMEDIA Stock Monitor</title>
+    <title>RAYAP ONLINE STOK</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,8 +29,8 @@
 
     <style>
         body {
-            background-color: #0f172a; /* Warna Dasar Gelap */
-            color: #e2e8f0; /* Warna Text Default Putih Abu */
+            background-color: #0f172a;
+            color: #e2e8f0;
             min-height: 100vh;
         }
         .glass-panel {
@@ -38,102 +38,110 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        /* Animasi Loading Awal */
+        /* Scrollbar Halus */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
 
-<body class="p-4 md:p-8" x-data="stockApp()">
+<body class="p-4 md:p-6" x-data="stockApp()">
 
-    <noscript class="text-center text-red-500 p-10 font-bold">
-        Javascript mati! Aktifkan Javascript di browser.
-    </noscript>
-
-    <div class="max-w-7xl mx-auto space-y-8">
+    <div class="max-w-[1600px] mx-auto space-y-6">
         
-        <header class="flex flex-col md:flex-row justify-between items-center glass-panel p-6 rounded-2xl shadow-2xl relative overflow-hidden border-t-4 border-secondary">
+        <header class="flex flex-col md:flex-row justify-between items-center glass-panel p-5 rounded-xl shadow-2xl relative overflow-hidden border-t-4 border-secondary">
             <div class="z-10 text-center md:text-left mb-4 md:mb-0">
-                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">
-                    ADAMMEDIA
+                <h1 class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">
                 </h1>
-                <p class="text-gray-400 text-sm tracking-widest uppercase">Stock Monitor</p>
+                <p class="text-gray-400 text-xs tracking-widest uppercase">RAYAP ONLINE</p>
             </div>
 
             <div class="flex gap-3 z-10 w-full md:w-auto">
                 <input type="text" x-model="searchQuery" placeholder="Cari Produk..." 
-                    class="flex-1 md:flex-none py-3 px-4 rounded-xl bg-slate-800 border border-slate-600 focus:border-accent outline-none transition w-full md:w-64">
-                <button @click="fetchData()" class="p-3 rounded-xl bg-slate-700 hover:bg-slate-600 border border-slate-500 transition">
+                    class="flex-1 md:flex-none py-2 px-4 rounded-lg bg-slate-800 border border-slate-600 focus:border-accent outline-none transition w-full md:w-64 text-sm">
+                <button @click="fetchData()" class="p-2 px-4 rounded-lg bg-slate-700 hover:bg-slate-600 border border-slate-500 transition text-white">
                     <i class="fa-solid fa-sync" :class="{'fa-spin': isLoading}"></i>
                 </button>
             </div>
         </header>
 
-        <div class="flex justify-center md:justify-start gap-4">
+        <div class="flex justify-center md:justify-start gap-3">
             <button @click="switchTab('circles')" 
-                :class="currentTab === 'circles' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
-                class="px-6 py-3 rounded-xl transition-all border border-white/5 w-1/2 md:w-auto text-center">
+                :class="currentTab === 'circles' ? 'bg-accent text-slate-900 font-bold shadow-[0_0_15px_rgba(0,242,254,0.3)]' : 'bg-slate-800 text-gray-400 hover:text-white'"
+                class="px-6 py-2 rounded-lg transition-all border border-white/5 w-1/2 md:w-auto text-sm uppercase tracking-wider">
                 Circle
             </button>
             <button @click="switchTab('regulers')" 
-                :class="currentTab === 'regulers' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
-                class="px-6 py-3 rounded-xl transition-all border border-white/5 w-1/2 md:w-auto text-center">
+                :class="currentTab === 'regulers' ? 'bg-accent text-slate-900 font-bold shadow-[0_0_15px_rgba(0,242,254,0.3)]' : 'bg-slate-800 text-gray-400 hover:text-white'"
+                class="px-6 py-2 rounded-lg transition-all border border-white/5 w-1/2 md:w-auto text-sm uppercase tracking-wider">
                 Reguler
             </button>
         </div>
 
         <main>
             <div x-show="isLoading" class="text-center py-20 animate-pulse">
-                <i class="fa-solid fa-circle-notch fa-spin text-4xl text-accent mb-4"></i>
-                <p class="text-gray-400">Sedang mengambil data...</p>
+                <i class="fa-solid fa-circle-notch fa-spin text-3xl text-accent mb-3"></i>
+                <p class="text-gray-500 text-sm">Update Data...</p>
             </div>
 
-            <div x-show="!isLoading && error" class="glass-panel p-8 rounded-2xl text-center border-red-500/30 text-red-400" style="display: none;">
-                <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+            <div x-show="!isLoading && error" class="glass-panel p-6 rounded-xl text-center border-red-500/30 text-red-400" style="display: none;">
                 <p x-text="error"></p>
-                <button @click="fetchData()" class="mt-4 px-4 py-2 bg-red-900/50 rounded-lg text-white text-sm">Coba Lagi</button>
+                <button @click="fetchData()" class="mt-2 px-4 py-1 bg-red-900/50 rounded text-xs text-white">Refresh</button>
             </div>
 
             <div x-show="!isLoading && !error && filteredData.length === 0" class="text-center py-20 text-gray-500" style="display: none;">
-                <p>Data Kosong / Tidak Ditemukan</p>
+                <p>Data tidak ditemukan</p>
             </div>
 
-            <div x-show="!isLoading && !error" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div x-show="!isLoading && !error" 
+                 class="grid gap-3 transition-all duration-300"
+                 :class="currentTab === 'circles' 
+                    ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5' 
+                    : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'">
+                
                 <template x-for="item in filteredData" :key="item.config">
-                    <div class="glass-panel p-5 rounded-2xl hover:border-accent/50 transition duration-300 relative group">
+                    <div class="glass-panel p-4 rounded-xl hover:border-accent/50 transition duration-300 relative group flex flex-col justify-between h-full">
                         
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <p class="text-[10px] text-gray-500 uppercase font-bold">Kode</p>
-                                <h3 @click="copyText(item.config)" class="text-lg font-bold text-white cursor-pointer hover:text-accent flex items-center gap-2">
+                        <div class="flex justify-between items-start mb-2 gap-2">
+                            <div class="overflow-hidden">
+                                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Kode</p>
+                                <h3 @click="copyText(item.config)" class="text-base font-bold text-white cursor-pointer hover:text-accent truncate" :title="item.config">
                                     <span x-text="item.config"></span>
-                                    <i class="fa-regular fa-copy text-xs opacity-50"></i>
                                 </h3>
                             </div>
                             <div :class="item.count > 5 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'" 
-                                 class="px-2 py-1 rounded text-xs font-bold border border-white/10">
+                                 class="px-2 py-1 rounded text-[10px] font-bold border border-white/10 whitespace-nowrap">
                                 <span x-text="item.count"></span> Stok
                             </div>
                         </div>
 
-                        <hr class="border-white/5 mb-3">
+                        <hr class="border-white/5 mb-2">
 
                         <div>
-                            <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Alokasi</p>
-                            
                             <template x-if="isObject(item.quota_allocation)">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <template x-for="(val, key) in item.quota_allocation">
-                                        <div class="bg-slate-800/80 p-1.5 rounded border border-white/5">
-                                            <span class="block text-[9px] text-gray-400 uppercase" x-text="key"></span>
-                                            <span class="block text-xs font-mono text-white" x-text="val"></span>
-                                        </div>
-                                    </template>
+                                <div>
+                                    <p class="text-[9px] text-gray-500 uppercase font-bold mb-1">Area Details</p>
+                                    <div class="grid grid-cols-2 gap-1.5">
+                                        <template x-for="(val, key) in item.quota_allocation">
+                                            <div class="bg-slate-800/80 px-2 py-1 rounded border border-white/5">
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-[8px] text-gray-400 uppercase truncate max-w-[40px]" x-text="key"></span>
+                                                    <span class="text-[10px] font-mono text-accent" x-text="val"></span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
                                 </div>
                             </template>
 
                             <template x-if="!isObject(item.quota_allocation)">
-                                <div class="text-2xl font-bold text-gray-300">
-                                    <span x-text="item.quota_allocation"></span> <span class="text-xs font-normal text-gray-500">GB</span>
+                                <div class="mt-1">
+                                    <p class="text-[9px] text-gray-500 uppercase font-bold">Kuota</p>
+                                    <div class="text-xl font-bold text-gray-200">
+                                        <span x-text="item.quota_allocation"></span> 
+                                        <span class="text-[10px] font-normal text-gray-500 ml-1">GB</span>
+                                    </div>
                                 </div>
                             </template>
                         </div>
@@ -145,7 +153,7 @@
 
         <div x-show="toast.show" 
              x-transition 
-             class="fixed bottom-6 right-6 bg-slate-800 border border-accent text-accent px-4 py-2 rounded-xl shadow-lg z-50 text-sm font-bold flex items-center gap-2"
+             class="fixed bottom-6 right-6 bg-slate-800 border border-accent text-accent px-4 py-2 rounded-xl shadow-lg z-50 text-xs font-bold flex items-center gap-2"
              style="display: none;">
             <i class="fa-solid fa-check"></i> <span x-text="toast.message"></span>
         </div>
@@ -161,7 +169,7 @@
                 isLoading: true,
                 error: null,
                 apiKey: 'bunderkananbunderkanankirikotaksegitigaatas',
-                baseUrl: '/api/', // Wajib '/api/' agar lewat proxy vercel.json
+                baseUrl: '/api/', 
 
                 init() {
                     this.fetchData();
@@ -189,20 +197,15 @@
                     this.data = [];
 
                     try {
-                        // Gunakan Date.now() untuk mencegah cache browser
                         const url = `${this.baseUrl}${this.currentTab}?_=${Date.now()}`;
-                        
                         const res = await fetch(url, {
                             headers: { 'x-api-key': this.apiKey }
                         });
 
                         if (!res.ok) throw new Error(`Gagal: ${res.status}`);
-                        
                         const json = await res.json();
                         
                         if (json.error) throw new Error(json.error);
-                        
-                        // Validasi data array
                         this.data = Array.isArray(json) ? json : [];
 
                     } catch (err) {
@@ -216,7 +219,7 @@
                     navigator.clipboard.writeText(txt);
                     this.toast.message = 'Disalin: ' + txt;
                     this.toast.show = true;
-                    setTimeout(() => this.toast.show = false, 2000);
+                    setTimeout(() => this.toast.show = false, 1500);
                 },
 
                 toast: { show: false, message: '' }
