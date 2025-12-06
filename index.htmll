@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMMEDIA Premium Stock Monitor</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        glassBorder: 'rgba(255, 255, 255, 0.1)',
+                        accent: '#00f2fe',
+                        secondary: '#4facfe'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+        .glass-panel {
+            background: rgba(17, 25, 40, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px -10px rgba(0, 242, 254, 0.3);
+            border-color: rgba(0, 242, 254, 0.5);
+        }
+    </style>
+</head>
+<body class="antialiased p-4 md:p-8" x-data="stockApp()">
+
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center glass-panel p-6 rounded-2xl shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary to-accent"></div>
+            <div class="z-10 mb-4 md:mb-0 text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-accent tracking-tight">
+                    ADAMMEDIA
+                </h1>
+                <p class="text-gray-400 text-sm mt-1 uppercase tracking-widest">Inventory Intelligence System</p>
+            </div>
+            <div class="flex gap-4 z-10">
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" x-model="searchQuery" placeholder="Cari Kode..." class="pl-12 pr-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white focus:outline-none focus:border-accent w-64 md:w-80">
+                </div>
+                <button @click="fetchData()" class="p-3 rounded-xl bg-gradient-to-r from-secondary to-accent text-slate-900 font-bold hover:shadow-[0_0_20px_rgba(79,172,254,0.5)] transition-all active:scale-95">
+                    <i class="fa-solid fa-sync" :class="{'fa-spin': isLoading}"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex justify-center md:justify-start space-x-4">
+            <button @click="currentTab = 'circles'; fetchData()" :class="currentTab === 'circles' ? 'bg-accent text-slate-900 shadow-[0_0_15px_rgba(0,242,254,0.4)]' : 'bg-slate-800/50 text-gray-400 hover:text-white'" class="px-8 py-3 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm border border-white/5">
+                <i class="fa-solid fa-circle-notch mr-2"></i> Circle
+            </button>
+            <button @click="currentTab = 'regulers'; fetchData()" :class="currentTab === 'regulers' ? 'bg-accent text-slate-900 shadow-[0_0_15px_rgba(0,242,254,0.4)]' : 'bg-slate-800/50 text-gray-400 hover:text-white'" class="px-8 py-3 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm border border-white/5">
+                <i class="fa-solid fa-cubes mr-2"></i> Reguler
+            </button>
+        </div>
+
+        <main>
+            <div x-show="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse">
+                <template x-for="i in 4"><div class="glass-panel h-48 rounded-2xl"></div></template>
+            </div>
+
+            <div x-show="!isLoading && error" class="glass-panel p-8 rounded-2xl text-center border-red-500/30">
+                <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4"></i>
+                <h3 class="text-xl font-bold text-red-400">Gagal Mengambil Data</h3>
+                <p class="text-gray-400 mt-2" x-text="error"></p>
+                <button @click="fetchData()" class="mt-4 px-6 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition">Coba Lagi</button>
+            </div>
+
+            <div x-show="!isLoading && !error && filteredData.length === 0" class="glass-panel p-12 rounded-2xl text-center">
+                <i class="fa-solid fa-box-open text-5xl text-gray-600 mb-4"></i>
+                <p class="text-xl text-gray-400">Tidak ada produk ditemukan.</p>
+            </div>
+
+            <div x-show="!isLoading && !error" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <template x-for="item in filteredData" :key="item.config">
+                    <div class="glass-panel rounded-2xl p-6 transition-all duration-300 card-hover group relative overflow-hidden flex flex-col justify-between h-full">
+                        <div class="absolute -top-10 -right-10 w-24 h-24 bg-accent/20 rounded-full blur-2xl group-hover:bg-accent/30 transition-all"></div>
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Kode Produk</p>
+                                    <h2 @click="copyToClipboard(item.config)" class="text-xl font-bold text-white cursor-pointer hover:text-accent transition flex items-center gap-2">
+                                        <span x-text="item.config"></span><i class="fa-regular fa-copy text-xs opacity-50"></i>
+                                    </h2>
+                                </div>
+                                <div :class="item.count > 5 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'" class="px-3 py-1 rounded-lg border text-sm font-bold shadow-lg backdrop-blur-md">
+                                    <span x-text="item.count"></span> Stok
+                                </div>
+                            </div>
+                            <hr class="border-white/10 mb-4">
+                            <div class="space-y-2">
+                                <p class="text-xs text-secondary uppercase tracking-wider font-semibold flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Alokasi Kuota</p>
+                                <template x-if="typeof item.quota_allocation === 'object' && item.quota_allocation !== null">
+                                    <div class="grid grid-cols-2 gap-2 mt-2">
+                                        <template x-for="(qty, area) in item.quota_allocation">
+                                            <div class="bg-slate-800/50 p-2 rounded border border-white/5 hover:border-accent/30 transition">
+                                                <span class="block text-[10px] text-gray-500 uppercase" x-text="area"></span>
+                                                <span class="block text-sm font-mono text-gray-200" x-text="qty + ' GB'"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <template x-if="typeof item.quota_allocation !== 'object'">
+                                    <div class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                                        <span x-text="item.quota_allocation"></span> <span class="text-sm text-gray-500 font-normal">GB</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </main>
+        
+        <div x-show="toast.show" x-transition class="fixed bottom-5 right-5 z-50 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-white/10" :class="toast.type === 'success' ? 'bg-emerald-900/90 text-emerald-400' : 'bg-red-900/90 text-red-400'">
+            <i class="fa-solid" :class="toast.type === 'success' ? 'fa-check-circle' : 'fa-triangle-exclamation'"></i>
+            <span x-text="toast.message" class="font-medium"></span>
+        </div>
+        
+        <footer class="text-center text-gray-600 text-sm mt-12 pb-8"><p>&copy; 2025 ADAMMEDIA System.</p></footer>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('stockApp', () => ({
+                currentTab: 'circles',
+                data: [],
+                searchQuery: '',
+                isLoading: false,
+                error: null,
+                apiKey: 'bunderkananbunderkanankirikotaksegitigaatas',
+                
+                // PENTING: Base URL diganti ke path lokal agar di-handle vercel.json
+                baseUrl: '/api/', 
+                
+                toast: { show: false, message: '', type: 'success' },
+
+                init() { this.fetchData(); },
+                
+                get filteredData() {
+                    if (!this.searchQuery) return this.data;
+                    return this.data.filter(item => item.config.toLowerCase().includes(this.searchQuery.toLowerCase()));
+                },
+
+                async fetchData() {
+                    this.isLoading = true; this.error = null; this.data = [];
+                    try {
+                        const response = await fetch(this.baseUrl + this.currentTab, {
+                            method: 'GET',
+                            headers: { 'x-api-key': this.apiKey, 'Content-Type': 'application/json' }
+                        });
+                        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                        const result = await response.json();
+                        if (result.error) throw new Error(result.error);
+                        this.data = result;
+                    } catch (err) {
+                        this.error = err.message || 'Gagal terhubung ke server';
+                        this.showToast(this.error, 'error');
+                    } finally { this.isLoading = false; }
+                },
+
+                copyToClipboard(text) {
+                    navigator.clipboard.writeText(text).then(() => this.showToast(`Kode ${text} disalin!`)).catch(() => this.showToast('Gagal menyalin', 'error'));
+                },
+
+                showToast(msg, type = 'success') {
+                    this.toast.message = msg; this.toast.type = type; this.toast.show = true;
+                    setTimeout(() => this.toast.show = false, 3000);
+                }
+            }));
+        });
+    </script>
+</body>
+</html>
