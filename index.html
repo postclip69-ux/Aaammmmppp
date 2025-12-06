@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAYAP ONLINE STOK</title>
+    <title>INFO STOK RAYAP ONLINE</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,9 +18,12 @@
                 extend: {
                     fontFamily: { sans: ['Space Grotesk', 'sans-serif'] },
                     colors: {
-                        glass: 'rgba(255, 255, 255, 0.05)',
+                        glass: 'rgba(17, 25, 40, 0.9)',
                         accent: '#00f2fe',
                         secondary: '#4facfe'
+                    },
+                    fontSize: {
+                        'xxs': '0.55rem', // Font super kecil untuk HP
                     }
                 }
             }
@@ -29,119 +32,99 @@
 
     <style>
         body {
-            background-color: #0f172a;
+            background-color: #0b1120;
             color: #e2e8f0;
             min-height: 100vh;
         }
         .glass-panel {
-            background: rgba(17, 25, 40, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
         }
-        /* Scrollbar Halus */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        /* Hide Scrollbar */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
 
-<body class="p-4 md:p-6" x-data="stockApp()">
+<body class="p-2" x-data="stockApp()">
 
-    <div class="max-w-[1600px] mx-auto space-y-6">
+    <div class="max-w-full mx-auto space-y-4">
         
-        <header class="flex flex-col md:flex-row justify-between items-center glass-panel p-5 rounded-xl shadow-2xl relative overflow-hidden border-t-4 border-secondary">
-            <div class="z-10 text-center md:text-left mb-4 md:mb-0">
-                <h1 class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">
-                </h1>
-                <p class="text-gray-400 text-xs tracking-widest uppercase">RAYAP ONLINE</p>
+        <header class="flex justify-between items-center glass-panel p-3 rounded-lg border-b-2 border-secondary sticky top-0 z-50 bg-[#0b1120]">
+            <div>
+                <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">RAYAP ONLINE</h1>
             </div>
-
-            <div class="flex gap-3 z-10 w-full md:w-auto">
-                <input type="text" x-model="searchQuery" placeholder="Cari Produk..." 
-                    class="flex-1 md:flex-none py-2 px-4 rounded-lg bg-slate-800 border border-slate-600 focus:border-accent outline-none transition w-full md:w-64 text-sm">
-                <button @click="fetchData()" class="p-2 px-4 rounded-lg bg-slate-700 hover:bg-slate-600 border border-slate-500 transition text-white">
+            <div class="flex gap-2">
+                <input type="text" x-model="searchQuery" placeholder="Cari..." 
+                    class="py-1 px-3 rounded bg-slate-800 border border-slate-600 text-xs w-24 focus:w-32 transition-all outline-none">
+                <button @click="fetchData()" class="p-1.5 px-3 rounded bg-slate-700 text-white text-xs">
                     <i class="fa-solid fa-sync" :class="{'fa-spin': isLoading}"></i>
                 </button>
             </div>
         </header>
 
-        <div class="flex justify-center md:justify-start gap-3">
+        <div class="flex gap-2">
             <button @click="switchTab('circles')" 
-                :class="currentTab === 'circles' ? 'bg-accent text-slate-900 font-bold shadow-[0_0_15px_rgba(0,242,254,0.3)]' : 'bg-slate-800 text-gray-400 hover:text-white'"
-                class="px-6 py-2 rounded-lg transition-all border border-white/5 w-1/2 md:w-auto text-sm uppercase tracking-wider">
-                Circle
+                :class="currentTab === 'circles' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
+                class="flex-1 py-2 rounded text-xs uppercase tracking-wider transition-all border border-white/5">
+                Circle (5 Col)
             </button>
             <button @click="switchTab('regulers')" 
-                :class="currentTab === 'regulers' ? 'bg-accent text-slate-900 font-bold shadow-[0_0_15px_rgba(0,242,254,0.3)]' : 'bg-slate-800 text-gray-400 hover:text-white'"
-                class="px-6 py-2 rounded-lg transition-all border border-white/5 w-1/2 md:w-auto text-sm uppercase tracking-wider">
-                Reguler
+                :class="currentTab === 'regulers' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
+                class="flex-1 py-2 rounded text-xs uppercase tracking-wider transition-all border border-white/5">
+                Reguler (4 Col)
             </button>
         </div>
 
-        <main>
-            <div x-show="isLoading" class="text-center py-20 animate-pulse">
-                <i class="fa-solid fa-circle-notch fa-spin text-3xl text-accent mb-3"></i>
-                <p class="text-gray-500 text-sm">Update Data...</p>
+        <main class="min-h-[60vh]">
+            
+            <div x-show="isLoading" class="text-center py-10">
+                <i class="fa-solid fa-circle-notch fa-spin text-2xl text-accent"></i>
             </div>
 
-            <div x-show="!isLoading && error" class="glass-panel p-6 rounded-xl text-center border-red-500/30 text-red-400" style="display: none;">
+            <div x-show="!isLoading && error" class="bg-red-900/30 p-4 rounded text-center text-red-400 text-xs border border-red-500/30">
                 <p x-text="error"></p>
-                <button @click="fetchData()" class="mt-2 px-4 py-1 bg-red-900/50 rounded text-xs text-white">Refresh</button>
-            </div>
-
-            <div x-show="!isLoading && !error && filteredData.length === 0" class="text-center py-20 text-gray-500" style="display: none;">
-                <p>Data tidak ditemukan</p>
+                <button @click="fetchData()" class="mt-2 text-white underline">Refresh</button>
             </div>
 
             <div x-show="!isLoading && !error" 
-                 class="grid gap-3 transition-all duration-300"
-                 :class="currentTab === 'circles' 
-                    ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5' 
-                    : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'">
+                 class="grid gap-1.5 transition-all"
+                 :class="currentTab === 'circles' ? 'grid-cols-5' : 'grid-cols-4'">
                 
                 <template x-for="item in filteredData" :key="item.config">
-                    <div class="glass-panel p-4 rounded-xl hover:border-accent/50 transition duration-300 relative group flex flex-col justify-between h-full">
+                    <div class="glass-panel p-1.5 rounded hover:bg-slate-700 transition relative flex flex-col justify-between h-full min-h-[60px]">
                         
-                        <div class="flex justify-between items-start mb-2 gap-2">
-                            <div class="overflow-hidden">
-                                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Kode</p>
-                                <h3 @click="copyText(item.config)" class="text-base font-bold text-white cursor-pointer hover:text-accent truncate" :title="item.config">
+                        <div class="mb-1">
+                            <div class="flex justify-between items-start">
+                                <h3 @click="copyText(item.config)" 
+                                    class="text-[9px] md:text-xs font-bold text-white cursor-pointer truncate w-full" 
+                                    :title="item.config">
                                     <span x-text="item.config"></span>
                                 </h3>
                             </div>
-                            <div :class="item.count > 5 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'" 
-                                 class="px-2 py-1 rounded text-[10px] font-bold border border-white/10 whitespace-nowrap">
-                                <span x-text="item.count"></span> Stok
+                            <div :class="item.count > 5 ? 'text-emerald-400' : 'text-red-400'" 
+                                 class="text-[8px] md:text-[10px] font-bold mt-0.5">
+                                Stok: <span x-text="item.count"></span>
                             </div>
                         </div>
 
-                        <hr class="border-white/5 mb-2">
-
-                        <div>
+                        <div class="border-t border-white/5 pt-1 mt-auto">
                             <template x-if="isObject(item.quota_allocation)">
-                                <div>
-                                    <p class="text-[9px] text-gray-500 uppercase font-bold mb-1">Area Details</p>
-                                    <div class="grid grid-cols-2 gap-1.5">
-                                        <template x-for="(val, key) in item.quota_allocation">
-                                            <div class="bg-slate-800/80 px-2 py-1 rounded border border-white/5">
-                                                <div class="flex justify-between items-center">
-                                                    <span class="text-[8px] text-gray-400 uppercase truncate max-w-[40px]" x-text="key"></span>
-                                                    <span class="text-[10px] font-mono text-accent" x-text="val"></span>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    </div>
+                                <div class="space-y-0.5">
+                                    <template x-for="(val, key) in item.quota_allocation">
+                                        <div class="flex justify-between items-center text-[7px] md:text-[9px]">
+                                            <span class="text-gray-500 truncate max-w-[25px]" x-text="key"></span>
+                                            <span class="text-accent font-mono" x-text="val"></span>
+                                        </div>
+                                    </template>
                                 </div>
                             </template>
 
                             <template x-if="!isObject(item.quota_allocation)">
-                                <div class="mt-1">
-                                    <p class="text-[9px] text-gray-500 uppercase font-bold">Kuota</p>
-                                    <div class="text-xl font-bold text-gray-200">
-                                        <span x-text="item.quota_allocation"></span> 
-                                        <span class="text-[10px] font-normal text-gray-500 ml-1">GB</span>
-                                    </div>
+                                <div class="text-center">
+                                    <span class="text-[10px] md:text-sm font-bold text-gray-200" x-text="item.quota_allocation"></span> 
+                                    <span class="text-[7px] text-gray-500">GB</span>
                                 </div>
                             </template>
                         </div>
@@ -149,13 +132,14 @@
                     </div>
                 </template>
             </div>
+
+            <div x-show="!isLoading && !error && filteredData.length === 0" class="text-center py-10 text-gray-600 text-xs">
+                Kosong
+            </div>
         </main>
 
-        <div x-show="toast.show" 
-             x-transition 
-             class="fixed bottom-6 right-6 bg-slate-800 border border-accent text-accent px-4 py-2 rounded-xl shadow-lg z-50 text-xs font-bold flex items-center gap-2"
-             style="display: none;">
-            <i class="fa-solid fa-check"></i> <span x-text="toast.message"></span>
+        <div x-show="toast.show" x-transition class="fixed bottom-4 right-4 bg-slate-800 border border-accent text-accent px-3 py-1.5 rounded shadow-lg z-50 text-xs font-bold">
+            <span x-text="toast.message"></span>
         </div>
         
     </div>
@@ -171,57 +155,35 @@
                 apiKey: 'bunderkananbunderkanankirikotaksegitigaatas',
                 baseUrl: '/api/', 
 
-                init() {
-                    this.fetchData();
-                },
-
-                switchTab(tab) {
-                    this.currentTab = tab;
-                    this.fetchData();
-                },
-
+                init() { this.fetchData(); },
+                switchTab(tab) { this.currentTab = tab; this.fetchData(); },
                 get filteredData() {
                     if (!this.searchQuery) return this.data;
-                    return this.data.filter(item => 
-                        item.config && item.config.toLowerCase().includes(this.searchQuery.toLowerCase())
-                    );
+                    return this.data.filter(item => item.config && item.config.toLowerCase().includes(this.searchQuery.toLowerCase()));
                 },
-
-                isObject(val) {
-                    return typeof val === 'object' && val !== null;
-                },
+                isObject(val) { return typeof val === 'object' && val !== null; },
 
                 async fetchData() {
-                    this.isLoading = true;
-                    this.error = null;
-                    this.data = [];
-
+                    this.isLoading = true; this.error = null; this.data = [];
                     try {
-                        const url = `${this.baseUrl}${this.currentTab}?_=${Date.now()}`;
-                        const res = await fetch(url, {
+                        const res = await fetch(`${this.baseUrl}${this.currentTab}?_=${Date.now()}`, {
                             headers: { 'x-api-key': this.apiKey }
                         });
-
-                        if (!res.ok) throw new Error(`Gagal: ${res.status}`);
+                        if (!res.ok) throw new Error('Gagal ambil data');
                         const json = await res.json();
-                        
                         if (json.error) throw new Error(json.error);
                         this.data = Array.isArray(json) ? json : [];
-
                     } catch (err) {
-                        this.error = err.message || 'Koneksi Bermasalah';
-                    } finally {
-                        this.isLoading = false;
-                    }
+                        this.error = 'Error Koneksi';
+                    } finally { this.isLoading = false; }
                 },
 
                 copyText(txt) {
                     navigator.clipboard.writeText(txt);
-                    this.toast.message = 'Disalin: ' + txt;
+                    this.toast.message = 'Copied: ' + txt;
                     this.toast.show = true;
-                    setTimeout(() => this.toast.show = false, 1500);
+                    setTimeout(() => this.toast.show = false, 1000);
                 },
-
                 toast: { show: false, message: '' }
             }));
         });
