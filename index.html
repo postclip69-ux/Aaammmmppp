@@ -24,6 +24,9 @@
                     },
                     fontSize: {
                         'xxs': '0.55rem', 
+                    },
+                    boxShadow: {
+                        'glow': '0 0 10px rgba(52, 211, 153, 0.7)',
                     }
                 }
             }
@@ -41,7 +44,15 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(8px);
         }
-        /* Hide Scrollbar */
+        /* Animasi Checkmark */
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .check-icon {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         [x-cloak] { display: none !important; }
     </style>
@@ -93,10 +104,15 @@
                  :class="currentTab === 'circles' ? 'grid-cols-5' : 'grid-cols-4'">
                 
                 <template x-for="item in filteredData" :key="item.config">
-                    <div class="glass-panel p-1.5 rounded hover:bg-slate-700 transition relative flex flex-col justify-between h-full min-h-[60px]">
+                    <div class="glass-panel p-1.5 rounded hover:bg-slate-700 transition relative flex flex-col justify-between h-full min-h-[60px] overflow-hidden group">
                         
-                        <div class="mb-1">
-                            <div class="flex justify-between items-start">
+                        <template x-if="item.count > 0">
+                            <div class="absolute top-0 right-0 p-1 z-10 check-icon">
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] md:text-xs shadow-glow bg-slate-900 rounded-full border border-emerald-500/50"></i>
+                            </div>
+                        </template>
+
+                        <div class="mb-1 pr-3"> <div class="flex justify-between items-start">
                                 <h3 @click="copyText(item.config)" 
                                     class="text-[9px] md:text-xs font-bold text-white cursor-pointer truncate w-full hover:text-accent" 
                                     :title="item.config">
@@ -105,7 +121,7 @@
                             </div>
                             
                             <div :class="item.count > 0 ? 'text-emerald-400' : 'text-red-500'" 
-                                 class="text-[8px] md:text-[10px] font-bold mt-0.5">
+                                 class="text-[8px] md:text-[10px] font-bold mt-0.5 flex items-center gap-1">
                                 Stok: <span x-text="item.count"></span>
                             </div>
                         </div>
@@ -159,8 +175,11 @@
                 init() { this.fetchData(); },
                 switchTab(tab) { this.currentTab = tab; this.fetchData(); },
                 get filteredData() {
-                    if (!this.searchQuery) return this.data;
-                    return this.data.filter(item => item.config && item.config.toLowerCase().includes(this.searchQuery.toLowerCase()));
+                    let result = this.data;
+                    if (this.searchQuery) {
+                        result = result.filter(item => item.config && item.config.toLowerCase().includes(this.searchQuery.toLowerCase()));
+                    }
+                    return result;
                 },
                 isObject(val) { return typeof val === 'object' && val !== null; },
 
@@ -173,7 +192,24 @@
                         if (!res.ok) throw new Error('Gagal ambil data');
                         const json = await res.json();
                         if (json.error) throw new Error(json.error);
-                        this.data = Array.isArray(json) ? json : [];
+                        
+                        let rawData = Array.isArray(json) ? json : [];
+                        
+                        // --- ALGORITMA SORTING PINTAR DISINI ---
+                        // Mengambil angka dari string (contoh: "XLCP5" -> 5, "XLCP100" -> 100)
+                        // Lalu mengurutkan dari kecil ke besar
+                        this.data = rawData.sort((a, b) => {
+                            // Hapus semua huruf, ambil angkanya saja
+                            const numA = parseInt(a.config.replace(/^\D+/g, '')) || 0;
+                            const numB = parseInt(b.config.replace(/^\D+/g, '')) || 0;
+                            
+                            // Jika angkanya sama (atau tidak ada angka), urutkan berdasarkan abjad biasa
+                            if (numA === numB) {
+                                return a.config.localeCompare(b.config);
+                            }
+                            return numA - numB;
+                        });
+
                     } catch (err) {
                         this.error = 'Error Koneksi';
                     } finally { this.isLoading = false; }
