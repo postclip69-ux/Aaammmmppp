@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:match*",
+      "destination": "https://juraganxl.my.id/api/:match*"
+    }
+  ]
+}
