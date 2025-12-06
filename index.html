@@ -42,7 +42,7 @@
             backdrop-filter: blur(8px);
         }
         
-        /* Animasi Muncul (Pop In) */
+        /* Animasi Muncul */
         @keyframes popIn {
             0% { transform: scale(0); opacity: 0; }
             80% { transform: scale(1.2); opacity: 1; }
@@ -52,7 +52,7 @@
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        /* Animasi Glow Berkedip (Breathing Neon) */
+        /* Animasi Glow Berkedip */
         @keyframes pulseGlow {
             0%, 100% { 
                 box-shadow: 0 0 5px rgba(52, 211, 153, 0.5); 
@@ -64,7 +64,7 @@
             }
         }
         .glow-active {
-            animation: pulseGlow 2s infinite ease-in-out; /* Berkedip setiap 2 detik */
+            animation: pulseGlow 2s infinite ease-in-out;
         }
 
         ::-webkit-scrollbar { width: 0px; background: transparent; }
@@ -147,7 +147,7 @@
                                     <template x-for="(val, key) in item.quota_allocation">
                                         <div class="flex justify-between items-center text-[7px] md:text-[9px]">
                                             <span class="text-gray-500 truncate max-w-[25px]" x-text="key"></span>
-                                            <span class="text-accent font-mono" x-text="val"></span>
+                                            <span class="text-accent font-mono" x-text="val + ' GB'"></span>
                                         </div>
                                     </template>
                                 </div>
@@ -210,7 +210,7 @@
                         
                         let rawData = Array.isArray(json) ? json : [];
                         
-                        // LOGIKA SORTING (ANGKA -> ABJAD)
+                        // Sorting Smart (Angka -> Abjad)
                         this.data = rawData.sort((a, b) => {
                             const numA = parseInt(a.config.replace(/^\D+/g, '')) || 0;
                             const numB = parseInt(b.config.replace(/^\D+/g, '')) || 0;
