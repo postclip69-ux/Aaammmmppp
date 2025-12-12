@@ -17,16 +17,16 @@
                 extend: {
                     fontFamily: { sans: ['Space Grotesk', 'sans-serif'] },
                     colors: {
-                        glass: 'rgba(17, 25, 40, 0.95)', /* Lebih gelap biar solid */
+                        glass: 'rgba(17, 25, 40, 0.95)',
                         accent: '#00f2fe',
                         secondary: '#4facfe',
-                        bgDark: '#050910' /* Warna latar belakang luar */
+                        bgDark: '#050910'
                     },
                     fontSize: {
                         'xxs': '0.55rem', 
                     },
                     screens: {
-                        'xs': '480px', /* Batas kunci lebar HP */
+                        'xs': '480px',
                     }
                 }
             }
@@ -34,25 +34,22 @@
     </script>
 
     <style>
-        /* Background luar (hitam pekat) */
         body {
             background-color: #000000; 
             color: #e2e8f0;
             min-height: 100vh;
-            /* Flexbox biar container selalu di tengah layar besar */
             display: flex;
             justify-content: center;
             align-items: flex-start;
         }
 
-        /* Container "Aplikasi" yang dikunci lebarnya */
         #mobile-app-container {
             width: 100%;
-            max-width: 480px; /* INI KUNCINYA: Maksimal lebar 480px (ukuran HP) */
+            max-width: 480px;
             background-color: #0b1120;
             min-height: 100vh;
             position: relative;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1); /* Efek bayangan biar keren di desktop */
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
         }
 
         .glass-panel {
@@ -61,7 +58,6 @@
             backdrop-filter: blur(8px);
         }
         
-        /* Animasi */
         @keyframes popIn {
             0% { transform: scale(0); opacity: 0; }
             80% { transform: scale(1.2); opacity: 1; }
@@ -104,10 +100,10 @@
         </header>
 
         <div class="flex gap-2">
-            <button @click="switchTab('circles')" 
-                :class="currentTab === 'circles' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
+            <button @click="switchTab('xla')" 
+                :class="currentTab === 'xla' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
                 class="flex-1 py-2 rounded text-[10px] uppercase tracking-wider transition-all border border-white/5">
-                Circle
+                AKRAB XLA
             </button>
             <button @click="switchTab('regulers')" 
                 :class="currentTab === 'regulers' ? 'bg-accent text-slate-900 font-bold' : 'bg-slate-800 text-gray-400'"
@@ -128,36 +124,39 @@
             </div>
 
             <div x-show="!isLoading && !error" 
-                 class="grid gap-1.5 transition-all"
-                 :class="currentTab === 'circles' ? 'grid-cols-5' : 'grid-cols-4'">
+                 class="grid gap-2 transition-all"
+                 :class="currentTab === 'xla' ? 'grid-cols-2' : 'grid-cols-4'">
                 
                 <template x-for="item in filteredData" :key="item.config">
-                    <div class="glass-panel p-1.5 rounded hover:bg-slate-700 transition relative flex flex-col justify-between h-full min-h-[60px] overflow-hidden group">
+                    <div class="glass-panel p-2 rounded hover:bg-slate-700 transition relative flex flex-col justify-between h-full min-h-[70px] overflow-hidden group">
                         
                         <template x-if="item.count > 0">
                             <div class="absolute top-0 right-0 p-1 z-10 check-anim-entry">
-                                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] bg-slate-900 rounded-full border border-emerald-500/50 glow-active"></i>
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-[12px] bg-slate-900 rounded-full border border-emerald-500/50 glow-active"></i>
                             </div>
                         </template>
 
                         <div class="mb-1 pr-3">
                             <div class="flex justify-between items-start">
                                 <h3 @click="copyText(item.config)" 
-                                    class="text-[9px] font-bold text-white cursor-pointer truncate w-full hover:text-accent" 
+                                    class="font-bold text-white cursor-pointer truncate w-full hover:text-accent"
+                                    :class="currentTab === 'xla' ? 'text-sm' : 'text-[9px]'" 
                                     :title="item.config">
                                     <span x-text="item.config"></span>
                                 </h3>
                             </div>
                             
                             <div :class="item.count > 0 ? 'text-emerald-400' : 'text-red-500'" 
-                                 class="text-[8px] font-bold mt-0.5 flex items-center gap-1">
+                                 class="font-bold mt-1 flex items-center gap-1"
+                                 :class="currentTab === 'xla' ? 'text-xs' : 'text-[8px]'">
                                 Stok: <span x-text="item.count"></span>
                             </div>
 
                             <template x-if="item.count === 0">
-                                <div class="mt-0.5">
-                                    <p class="text-[6px] text-red-500 font-bold italic text-glow-red leading-tight">
-                                        BELUM TERSEDIA/HABIS
+                                <div class="mt-1">
+                                    <p class="text-red-500 font-bold italic text-glow-red leading-tight"
+                                       :class="currentTab === 'xla' ? 'text-[9px]' : 'text-[6px]'">
+                                        HABIS
                                     </p>
                                 </div>
                             </template>
@@ -177,8 +176,12 @@
 
                             <template x-if="!isObject(item.quota_allocation)">
                                 <div class="text-center">
-                                    <span class="text-[10px] font-bold text-gray-200" x-text="item.quota_allocation"></span> 
-                                    <span class="text-[7px] text-gray-500">GB</span>
+                                    <span class="font-bold text-gray-200" 
+                                          :class="currentTab === 'xla' ? 'text-xs' : 'text-[10px]'"
+                                          x-text="item.quota_allocation"></span> 
+                                    <span class="text-gray-500" :class="currentTab === 'xla' ? 'text-[9px]' : 'text-[7px]'">
+                                        <span x-show="currentTab === 'regulers'">GB</span>
+                                    </span>
                                 </div>
                             </template>
                         </div>
@@ -201,16 +204,16 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('stockApp', () => ({
-                currentTab: 'circles',
+                currentTab: 'xla', // Default tab ganti ke XLA jika diinginkan, atau biarkan user memilih
                 data: [],
                 searchQuery: '',
                 isLoading: true,
                 error: null,
-                apiKey: 'bunderkananbunderkanankirikotaksegitigaatas',
-                baseUrl: '/api/', 
+                apiKeyXDA: 'bunderkananbunderkanankirikotaksegitigaatas', // Key khusus XDA
 
                 init() { this.fetchData(); },
                 switchTab(tab) { this.currentTab = tab; this.fetchData(); },
+                
                 get filteredData() {
                     let result = this.data;
                     if (this.searchQuery) {
@@ -218,38 +221,77 @@
                     }
                     return result;
                 },
+                
                 isObject(val) { return typeof val === 'object' && val !== null; },
 
                 async fetchData() {
                     this.isLoading = true; this.error = null; this.data = [];
+                    
                     try {
-                        const res = await fetch(`${this.baseUrl}${this.currentTab}?_=${Date.now()}`, {
-                            headers: { 'x-api-key': this.apiKey }
-                        });
-                        if (!res.ok) throw new Error('Gagal ambil data');
+                        let url, options;
+                        
+                        // LOGIC PEMILIHAN URL & HANDLING DATA
+                        if (this.currentTab === 'xla') {
+                            // URL Proxy ke panel.khfy-store.com
+                            url = '/api/xla?_=' + Date.now();
+                            // API baru kemungkinan tidak butuh header key yg lama, atau key berbeda.
+                            // Kita kosongkan header custom agar tidak error CORS/Auth di server sana.
+                            options = {}; 
+                        } else {
+                            // URL XDA (regulers)
+                            url = '/api/regulers?_=' + Date.now();
+                            options = { headers: { 'x-api-key': this.apiKeyXDA } };
+                        }
+
+                        const res = await fetch(url, options);
+                        if (!res.ok) throw new Error('Gagal mengambil data dari server');
+                        
                         const json = await res.json();
+                        
                         if (json.error) throw new Error(json.error);
+
+                        // NORMALISASI DATA
+                        // Tujuannya agar format XLA dan XDA masuk ke variabel 'data' dengan struktur yg sama
+                        // Struktur target: { config: string, count: number, quota_allocation: any }
                         
-                        let rawData = Array.isArray(json) ? json : [];
-                        
-                        // Sorting Smart
-                        this.data = rawData.sort((a, b) => {
-                            const numA = parseInt(a.config.replace(/^\D+/g, '')) || 0;
-                            const numB = parseInt(b.config.replace(/^\D+/g, '')) || 0;
-                            if (numA === numB) return a.config.localeCompare(b.config);
-                            return numA - numB;
-                        });
+                        if (this.currentTab === 'xla') {
+                            // Handle response XLA: { ok: true, data: [...] }
+                            if (json.ok && Array.isArray(json.data)) {
+                                this.data = json.data.map(item => ({
+                                    config: item.nama,        // Mapping 'nama' -> 'config'
+                                    count: parseInt(item.sisa_slot), // Mapping 'sisa_slot' -> 'count'
+                                    quota_allocation: item.type // Mapping 'type' -> 'quota_allocation'
+                                }));
+                                // Tidak perlu sorting angka untuk XLA agar urutan sesuai API (SuperMini -> MegaBig)
+                            } else {
+                                this.data = [];
+                            }
+                        } else {
+                            // Handle response XDA (Array langsung)
+                            let rawData = Array.isArray(json) ? json : [];
+                            
+                            // Sorting angka khusus XDA (karena nama config biasanya ada nomor)
+                            this.data = rawData.sort((a, b) => {
+                                const numA = parseInt(a.config.replace(/^\D+/g, '')) || 0;
+                                const numB = parseInt(b.config.replace(/^\D+/g, '')) || 0;
+                                if (numA === numB) return a.config.localeCompare(b.config);
+                                return numA - numB;
+                            });
+                        }
 
                     } catch (err) {
-                        this.error = 'Error Koneksi';
-                    } finally { this.isLoading = false; }
+                        console.error(err);
+                        this.error = 'Gagal memuat data. Coba refresh.';
+                    } finally { 
+                        this.isLoading = false; 
+                    }
                 },
 
                 copyText(txt) {
                     navigator.clipboard.writeText(txt);
-                    this.toast.message = 'Copied: ' + txt;
+                    this.toast.message = 'Disalin: ' + txt;
                     this.toast.show = true;
-                    setTimeout(() => this.toast.show = false, 1000);
+                    setTimeout(() => this.toast.show = false, 1500);
                 },
                 toast: { show: false, message: '' }
             }));
