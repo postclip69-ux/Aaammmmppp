@@ -54,7 +54,7 @@
             backdrop-filter: blur(8px);
         }
         
-        /* Animations */
+        /* Animasi */
         @keyframes popIn {
             0% { transform: scale(0); opacity: 0; }
             80% { transform: scale(1.2); opacity: 1; }
@@ -137,7 +137,7 @@
                             <div class="flex justify-between items-start">
                                 <h3 @click="copyText(item.config)" 
                                     class="font-bold text-white cursor-pointer truncate w-full hover:text-accent"
-                                    :class="currentTab === 'xla' ? 'text-sm' : 'text-[9px]'" 
+                                    :class="currentTab === 'xla' ? 'text-sm' : 'text-[8px]'" 
                                     :title="item.config">
                                     <span x-text="item.config"></span>
                                 </h3>
@@ -165,7 +165,7 @@
                                 <div class="space-y-0.5">
                                     <template x-for="(val, key) in item.quota_allocation">
                                         <div class="flex justify-between items-center" 
-                                             :class="currentTab === 'xla' ? 'text-[9px]' : 'text-[7px]'">
+                                             :class="currentTab === 'xla' ? 'text-[9px]' : 'text-[6px]'">
                                             <span class="text-gray-400 truncate max-w-[40px]" x-text="key"></span>
                                             <span class="text-accent font-mono font-bold" x-text="val + ' GB'"></span>
                                         </div>
@@ -178,7 +178,9 @@
                                     <span class="font-bold text-gray-200" 
                                           :class="currentTab === 'xla' ? 'text-xs' : 'text-[10px]'"
                                           x-text="item.quota_allocation"></span> 
-                                    <span class="text-gray-500 text-[8px]">GB</span>
+                                    <span class="text-gray-500 text-[8px]">
+                                        <span x-show="currentTab === 'regulers'">GB</span>
+                                    </span>
                                 </div>
                             </template>
                         </div>
@@ -208,17 +210,35 @@
                 error: null,
                 apiKeyXDA: 'bunderkananbunderkanankirikotaksegitigaatas',
 
-                // DETAIL KUOTA XLA MANUAL (Dicocokkan berdasarkan Nama)
+                // 1. KAMUS GANTI NAMA AKRAB XDA
+                xdaNames: {
+                    'XDA13': 'SUPERMINI',
+                    'XDA19': 'SUPERLITE',
+                    'XDA25': 'LITE',
+                    'XDA27': 'HYPER LITE',
+                    'XDA31': 'MINI',
+                    'XDA34': 'MEDIUM',
+                    'XDA38': 'BIG',
+                    'XDA40': 'BIG PLUS',
+                    'XDA47': 'EXTRA BIG',
+                    'XDA50': 'JUMBO V2',
+                    'XDA55': 'SUPER BIG',
+                    'XDA63': 'MEGABIG V2',
+                    'XDA64': 'JUMBO',
+                    'XDA76': 'SUPER JUMBO',
+                    'XDA78': 'ULTRA JUMBO',
+                    'XDA88': 'MEGABIG'
+                },
+
+                // 2. KAMUS DETAIL KUOTA AKRAB XLA
                 xlaDetails: {
                     'SuperMini': { 'Area1': '13-15', 'Area2': '15-17', 'Area3': '20-22', 'Area4': '30-32' },
-                    'Mini':      { 'Area1': '31-33', 'Area2': '33-35', 'Area3': '38-40', 'Area4': '48-50' }, // Disederhanakan angkanya agar muat
+                    'Mini':      { 'Area1': '31-33', 'Area2': '33-35', 'Area3': '38-40', 'Area4': '48-50' },
                     'Big':       { 'Area1': '38-40', 'Area2': '40-42', 'Area3': '45-47', 'Area4': '55-57' },
                     'Jumbo V2':  { 'Area1': '50-52', 'Area2': '52-54', 'Area3': '57-59', 'Area4': '67-69' },
                     'JUMBO':     { 'Area1': '65',    'Area2': '70',    'Area3': '83',    'Area4': '123' },
                     'MegaBig':   { 'Area1': '88-90', 'Area2': '90-92', 'Area3': '95-97', 'Area4': '105-107' }
                 },
-                // Note: Untuk Mini saya bulatkan sedikit komanya di UI agar tidak terlalu panjang merusak layout, 
-                // tapi kalau mau presisi ganti stringnya di atas.
 
                 init() { this.fetchData(); },
                 switchTab(tab) { this.currentTab = tab; this.fetchData(); },
@@ -253,40 +273,50 @@
                         
                         if (json.error) throw new Error(json.error);
 
+                        // --- LOGIC XLA ---
                         if (this.currentTab === 'xla') {
                             if (json.ok && Array.isArray(json.data)) {
                                 this.data = json.data.map(item => {
-                                    // Bersihkan nama (trim spasi) untuk kunci pencarian
                                     let cleanName = item.nama ? item.nama.trim() : '';
-                                    
-                                    // Cari detail kuota manual
-                                    let quotaManual = this.xlaDetails[cleanName];
-
-                                    // Jika tidak ketemu persis, coba cari yang mirip (antisipasi "Big " vs "Big")
-                                    if (!quotaManual) {
-                                        // Fallback default jika nama tidak ada di kamus
-                                        quotaManual = item.type; 
-                                    }
+                                    let quotaManual = this.xlaDetails[cleanName]; 
+                                    if (!quotaManual) quotaManual = item.type; 
 
                                     return {
                                         config: item.nama,
                                         count: parseInt(item.sisa_slot),
-                                        quota_allocation: quotaManual // Masukkan object manual ke sini
+                                        quota_allocation: quotaManual 
                                     };
                                 });
                             }
-                        } else {
-                            // Logic XDA (Regulers)
+                        } 
+                        // --- LOGIC XDA (REGULERS) ---
+                        else {
                             let rawData = Array.isArray(json) ? json : [];
-                            this.data = rawData.sort((a, b) => {
-                                const numA = parseInt(a.config.replace(/^\D+/g, '')) || 0;
-                                const numB = parseInt(b.config.replace(/^\D+/g, '')) || 0;
-                                if (numA === numB) return a.config.localeCompare(b.config);
+
+                            const processedData = rawData.map(item => {
+                                const originalCode = item.config; 
+                                // Ganti nama sesuai kamus, jika tidak ada pakai kode asli
+                                const friendlyName = this.xdaNames[originalCode] || originalCode;
+
+                                return {
+                                    ...item,
+                                    config: friendlyName,    
+                                    _sortKey: originalCode   // Kunci rahasia untuk sorting
+                                };
+                            });
+
+                            // Sorting berdasarkan angka di kode asli (13, 19, 25...)
+                            this.data = processedData.sort((a, b) => {
+                                const numA = parseInt(a._sortKey.replace(/^\D+/g, '')) || 0;
+                                const numB = parseInt(b._sortKey.replace(/^\D+/g, '')) || 0;
+                                
+                                if (numA === numB) return a._sortKey.localeCompare(b._sortKey);
                                 return numA - numB;
                             });
                         }
 
                     } catch (err) {
+                        console.error(err);
                         this.error = 'Gagal memuat data.';
                     } finally { 
                         this.isLoading = false; 
