@@ -209,6 +209,9 @@
                 isLoading: true,
                 error: null,
                 apiKeyXDA: 'bunderkananbunderkanankirikotaksegitigaatas',
+                
+                // Interval ID
+                updateInterval: null,
 
                 // 1. KAMUS GANTI NAMA AKRAB XDA
                 xdaNames: {
@@ -240,8 +243,21 @@
                     'MegaBig':   { 'Area1': '88-90', 'Area2': '90-92', 'Area3': '95-97', 'Area4': '105-107' }
                 },
 
-                init() { this.fetchData(); },
-                switchTab(tab) { this.currentTab = tab; this.fetchData(); },
+                init() { 
+                    // Load pertama (pakai loading spinner)
+                    this.fetchData(false); 
+
+                    // Auto Update 5 Detik (5000ms) - Silent Mode
+                    this.updateInterval = setInterval(() => {
+                        this.fetchData(true); 
+                    }, 5000);
+                },
+
+                switchTab(tab) { 
+                    this.currentTab = tab; 
+                    this.data = []; // Reset view agar terlihat proses ganti tab
+                    this.fetchData(false); // Fetch manual
+                },
                 
                 get filteredData() {
                     let result = this.data;
@@ -253,9 +269,15 @@
                 
                 isObject(val) { return typeof val === 'object' && val !== null; },
 
-                async fetchData() {
-                    this.isLoading = true; this.error = null; this.data = [];
+                // isBackground = true artinya update diam-diam tanpa loading spinner
+                async fetchData(isBackground = false) {
                     
+                    if (!isBackground) {
+                        this.isLoading = true;
+                        this.error = null;
+                        this.data = []; 
+                    }
+
                     try {
                         let url, options;
                         
@@ -289,35 +311,36 @@
                                 });
                             }
                         } 
-                        // --- LOGIC XDA (REGULERS) ---
+                        // --- LOGIC XDA ---
                         else {
                             let rawData = Array.isArray(json) ? json : [];
 
                             const processedData = rawData.map(item => {
                                 const originalCode = item.config; 
-                                // Ganti nama sesuai kamus, jika tidak ada pakai kode asli
                                 const friendlyName = this.xdaNames[originalCode] || originalCode;
 
                                 return {
                                     ...item,
                                     config: friendlyName,    
-                                    _sortKey: originalCode   // Kunci rahasia untuk sorting
+                                    _sortKey: originalCode
                                 };
                             });
 
-                            // Sorting berdasarkan angka di kode asli (13, 19, 25...)
                             this.data = processedData.sort((a, b) => {
                                 const numA = parseInt(a._sortKey.replace(/^\D+/g, '')) || 0;
                                 const numB = parseInt(b._sortKey.replace(/^\D+/g, '')) || 0;
-                                
                                 if (numA === numB) return a._sortKey.localeCompare(b._sortKey);
                                 return numA - numB;
                             });
                         }
+                        
+                        if(isBackground) this.error = null;
 
                     } catch (err) {
                         console.error(err);
-                        this.error = 'Gagal memuat data.';
+                        if (!isBackground) {
+                            this.error = 'Gagal memuat data.';
+                        }
                     } finally { 
                         this.isLoading = false; 
                     }
