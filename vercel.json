@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/xla",
+      "destination": "https://panel.khfy-store.com/api_v3/cek_stock_akrab"
+    },
+    {
       "source": "/api/:match*",
       "destination": "https://juraganxl.my.id/api/:match*"
     }
