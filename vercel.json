@@ -5,6 +5,10 @@
       "destination": "https://panel.khfy-store.com/api_v3/cek_stock_akrab"
     },
     {
+      "source": "/api/mxs",
+      "destination": "https://rzstore.biz.id/cek_stok_v2"
+    },
+    {
       "source": "/api/:match*",
       "destination": "https://juraganxl.my.id/api/:match*"
     }
