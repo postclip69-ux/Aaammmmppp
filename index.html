@@ -307,7 +307,7 @@
                                         // Filter HANYA: BIG V2 dan JUMBO (Tidak termasuk Jumbo V2)
                                         const v = item.varian || "";
                                         // Cek "BIG V2" ATAU "JUMBO" (tapi bukan Jumbo V2)
-                                        return v.includes("Supermini") || v.includes("BIG") || v.includes("BIG V2") || (v.includes("JUMBO") && !v.includes("Jumbo V2"));
+                                        return v.includes("Supermini") || v.includes("MINI") || v.includes("BIG") || v.includes("BIG V2") || (v.includes("JUMBO") && !v.includes("Jumbo V2"));
                                     })
                                     .map(item => {
                                         // Convert deskripsi array ["AREA 1: xx"] menjadi Object {"AREA 1": "xx"}
