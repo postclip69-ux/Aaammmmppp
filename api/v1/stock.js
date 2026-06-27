@@ -49,7 +49,7 @@ export default async function handler(req, res) {
 
         const response =
             await fetch(
-                `${protocol}://${host}/stock`
+                `${protocol}://${host}/api/proxy`
             );
 
         const data =
