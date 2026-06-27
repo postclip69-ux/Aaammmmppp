@@ -77,6 +77,48 @@
 
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         [x-cloak] { display: none !important; }
+
+        .running-text {
+    margin: 15px 0;
+    padding: 12px 0;
+    overflow: hidden;
+
+    background: linear-gradient(
+        90deg,
+        #0f172a,
+        #1e293b,
+        #0f172a
+    );
+
+    border: 1px solid #22d3ee;
+    border-radius: 12px;
+
+    box-shadow:
+        0 0 10px rgba(34,211,238,.3),
+        inset 0 0 10px rgba(34,211,238,.1);
+}
+
+.running-content {
+    display: inline-block;
+    white-space: nowrap;
+
+    color: #22d3ee;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    animation: marquee 18s linear infinite;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
     </style>
 </head>
 
@@ -96,6 +138,12 @@
                 </button>
             </div>
         </header>
+
+        <div class="running-text">
+    <div class="running-content">
+        📢 Tes Running Text Cek Stok Akrab Promo 📢
+    </div>
+</div>
 
         <div class="flex gap-2">
             <button @click="switchTab('xla')" 
