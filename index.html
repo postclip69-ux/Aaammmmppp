@@ -363,6 +363,7 @@
                             if (json.ok && Array.isArray(json.data)) {
                                 this.data = json.data.map(item => {
                                     let cleanName = item.nama ? item.nama.trim() : '';
+                                    console.log(cleanName);
                                     let quotaManual = this.xlaDetails[cleanName]; 
                                     if (!quotaManual) quotaManual = item.type; 
                                     return {
