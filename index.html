@@ -18,8 +18,8 @@
                     fontFamily: { sans: ['Space Grotesk', 'sans-serif'] },
                     colors: {
                         glass: 'rgba(17, 25, 40, 0.95)',
-                        accent: '#00f2fe',
-                        secondary: '#4facfe',
+                        accent: '#D4AF37',
+                        secondary: '#8B5CF6',
                         bgDark: '#050910'
                     },
                     fontSize: { 'xxs': '0.55rem' },
@@ -31,29 +31,95 @@
 
     
     <style>
+        
         body {
-            background-color: #000000; 
-            color: #e2e8f0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
+    background:
+        radial-gradient(circle at top left, rgba(90,16,37,.35), transparent 30%),
+        radial-gradient(circle at top right, rgba(42,14,63,.35), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(8,20,43,.50), transparent 40%),
+        linear-gradient(
+            180deg,
+            #05050a 0%,
+            #08142b 40%,
+            #12071d 70%,
+            #05050a 100%
+        );
+
+    color: #e2e8f0;
+}
 
         #mobile-app-container {
-            width: 100%;
-            max-width: 480px;
-            background-color: #0b1120;
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
-        }
+
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8,20,43,.95),
+            rgba(18,7,29,.95)
+        );
+
+            #mobile-app-container::before {
+
+    content:'';
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(212,175,55,.06),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(128,0,128,.12),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(139,0,0,.12),
+            transparent 30%
+        );
+
+    pointer-events:none;
+
+}
+
+    position:relative;
+
+    overflow:hidden;
+
+}
 
         .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(8px);
-        }
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(22,10,40,.88),
+            rgba(8,20,43,.88)
+        );
+
+    border:1px solid rgba(212,175,55,.18);
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+
+        0 0 15px rgba(212,175,55,.04),
+
+        inset 0 1px 0 rgba(255,255,255,.03);
+
+}
         
         /* Animasi */
         @keyframes popIn {
@@ -79,35 +145,46 @@
         [x-cloak] { display: none !important; }
 
         .running-text {
-    margin: 15px 0;
-    padding: 12px 0;
-    overflow: hidden;
 
-    background: linear-gradient(
-        90deg,
-        #0f172a,
-        #1e293b,
-        #0f172a
-    );
+    margin:15px 0;
 
-    border: 1px solid #22d3ee;
-    border-radius: 12px;
+    padding:14px 0;
+
+    overflow:hidden;
+
+    border-radius:18px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(42,14,63,.95),
+            rgba(91,16,37,.95),
+            rgba(8,20,43,.95)
+        );
+
+    border:1px solid rgba(212,175,55,.4);
 
     box-shadow:
-        0 0 10px rgba(34,211,238,.3),
-        inset 0 0 10px rgba(34,211,238,.1);
+
+        0 0 20px rgba(212,175,55,.1),
+
+        inset 0 0 25px rgba(255,255,255,.03);
+
 }
 
 .running-content {
-    display: inline-block;
-    white-space: nowrap;
 
-    color: #22d3ee;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    color:#f5d77b;
 
-    animation: marquee 18s linear infinite;
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    text-shadow:
+
+        0 0 10px rgba(212,175,55,.5);
+
 }
 
 @keyframes marquee {
@@ -126,9 +203,25 @@
 
     <div id="mobile-app-container" class="p-2 space-y-4" x-data="stockApp()">
         
-        <header class="flex justify-between items-center glass-panel p-3 rounded-lg border-b-2 border-secondary sticky top-0 z-50 bg-[#0b1120]">
+       <header
+class="flex justify-between items-center
+glass-panel
+p-4
+rounded-2xl
+sticky top-0 z-50
+border border-yellow-500/20">
             <div>
-                <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">GASS DIORDER KAKA</h1>
+                <h1
+class="
+text-lg
+font-bold
+bg-clip-text
+text-transparent
+bg-gradient-to-r
+from-yellow-400
+via-red-500
+to-purple-400
+">GASS DIORDER KAKA</h1>
             </div>
             <div class="flex gap-2">
                 <input type="text" x-model="searchQuery" placeholder="Cari..." 
