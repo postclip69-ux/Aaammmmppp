@@ -51,7 +51,7 @@
         #mobile-app-container {
 
     width:100%;
-    max-width:500px;
+    max-width:540px;
     min-height:100vh;
 
     background:
@@ -183,12 +183,17 @@ radial-gradient(circle at 15% 15%,rgba(255,215,0,.06),transparent 20%),
 radial-gradient(circle at 85% 25%,rgba(168,85,247,.12),transparent 25%),
 radial-gradient(circle at 75% 80%,rgba(220,38,38,.10),transparent 25%);z-index:-1;}
 
+
+.hero-ornament{position:fixed;top:-120px;right:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.18),transparent 70%);pointer-events:none;filter:blur(8px)}
+.card-crown::before{content:"✦";position:absolute;left:10px;top:6px;color:#d4af37;opacity:.7}
+.glass-panel{box-shadow:0 0 24px rgba(212,175,55,.12), inset 0 1px 0 rgba(255,255,255,.05)!important}
+
 </style>
 </head>
 
-<body>
+<body><div class="hero-ornament"></div>
 
-    <div id="mobile-app-container" class="p-2 space-y-4" x-data="stockApp()">
+    <div id="mobile-app-container" class="p-4 space-y-5" x-data="stockApp()">
         
        <header
 class="flex justify-between items-center
@@ -208,7 +213,7 @@ bg-gradient-to-r
 from-yellow-400
 via-red-500
 to-purple-400
-">GASS DIORDER KAKA</h1>
+">👑 GASS DIORDER KAKA 👑</h1>
             </div>
             <div class="flex gap-2">
                 <input type="text" x-model="searchQuery" placeholder="Cari..." 
@@ -264,7 +269,7 @@ to-purple-400
                 >
                 
                 <template x-for="item in filteredData" :key="item.config">
-                    <div class="glass-panel p-3 rounded-3xl hover:scale-[1.02] transition relative flex flex-col justify-between h-full min-h-[110px] overflow-hidden group">
+                    <div class="glass-panel card-crown p-3 rounded-3xl hover:scale-[1.02] transition relative flex flex-col justify-between h-full min-h-[110px] overflow-hidden group">
                         
                         <template x-if="item.count > 0">
                             <div class="absolute top-0 right-0 p-1 z-10 check-anim-entry">
