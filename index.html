@@ -278,11 +278,12 @@ to-purple-400
 
                         <div class="mb-1 pr-3">
                             <div class="flex justify-between items-start">
-                               <h3 class="flex items-center gap-1">
-                                   <span class="text-yellow-400 text-[10px]">✦</span>
-
-<span x-text="item.config"></span>
-
+                               <h3
+    class="font-bold text-white"
+    :class="(currentTab === 'xla' || currentTab === 'mxs')
+        ? 'text-base'
+        : 'text-[9px]'"
+    x-text="item.config">
 </h3>
                             </div>
                      
