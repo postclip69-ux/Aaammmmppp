@@ -212,7 +212,7 @@ bg-gradient-to-r
 from-yellow-400
 via-red-500
 to-purple-400
-">STOK AKRAB RESMI & BERGARANSI</h1>
+">👑 GASS DIORDER KAKA 👑</h1>
             </div>
             <div class="flex justify-end">
                 <button @click="showMenu = !showMenu" class="p-1.5 px-3 rounded bg-slate-700 text-white text-[10px]">
@@ -236,7 +236,7 @@ to-purple-400
                 <span>Hubungi Kami</span>
             </button>
 
-            <button class="w-full text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
+            <button @click="showAbout = true; showMenu = false" class="w-full text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
                 <i class="fa-solid fa-crown text-purple-400"></i>
                 <span>Tentang Kami</span>
             </button>
@@ -375,6 +375,7 @@ to-purple-400
                 isLoading: true,
                 error: null,
                 showMenu: false,
+                showAbout: false,
                 apiKeyXDA: 'bunderkananbunderkanankirikotaksegitigaatas',
                 
                 updateInterval: null,
@@ -601,6 +602,25 @@ to-purple-400
             }));
         });
     </script>
+
+<div x-show="showAbout" x-cloak x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+<div class="glass-panel max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 rounded-3xl">
+<div class="flex justify-between items-center mb-4"><h2 class="text-xl font-bold text-yellow-400">👑 TENTANG KAMI</h2><button @click="showAbout=false"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="text-sm leading-7 text-slate-200 whitespace-pre-line">Website StokAkrab merupakan sistem monitoring stok Paket Akrab berbasis real-time yang dirancang untuk memberikan kemudahan, kecepatan, dan keakuratan informasi bagi seluruh mitra, reseller, dan pelanggan.
+
+Dengan teknologi pembaruan otomatis serta tampilan yang modern, kami berkomitmen menghadirkan layanan yang profesional, transparan, terpercaya, dan mudah diakses kapan saja serta di mana saja. Informasi yang ditampilkan pada sistem ini diperbarui secara berkala sehingga pengguna dapat memperoleh data stok terbaru secara cepat dan akurat.
+
+Sistem ini dibuat untuk membantu para mitra dalam memantau ketersediaan slot paket secara efisien, sehingga proses penjualan dapat berjalan lebih lancar, cepat, dan maksimal tanpa perlu melakukan pengecekan secara manual berulang kali.
+
+StokAkrab hadir bukan hanya sebagai sarana pengecekan stok, tetapi juga sebagai bentuk dukungan terhadap pertumbuhan ekosistem reseller dan mitra digital di Indonesia.
+
+Kami percaya bahwa kemudahan akses informasi dan pembaruan data secara real-time merupakan salah satu kunci penting dalam mendukung perkembangan bisnis digital yang lebih baik di masa depan.
+
+Bersama, mari tumbuh, berkembang, dan meraih lebih banyak peluang serta keuntungan di era digital yang terus bergerak maju.
+
+Terima kasih atas kepercayaan dan dukungan yang telah diberikan kepada kami. Apabila Anda memiliki pertanyaan, saran, maupun kendala, silakan hubungi kami melalui menu Hubungi Kami yang tersedia.
+
+🚀 Salam sukses, semakin cuan, dan terus berkembang bersama di era digital!</div></div></div>
 </body>
     </html>
     
