@@ -301,7 +301,7 @@ to-purple-400
                             <div class="flex justify-between items-start">
                                <h3
     class="font-bold text-white"
-    :class="(currentTab === 'xla' || currentTab === 'mxs')
+    :class="(currentTab === 'xla' || currentTab === 'mxs' || currentTab === 'regulers')
         ? 'text-base'
         : 'text-[9px]'"
     x-text="item.config">
@@ -311,14 +311,14 @@ to-purple-400
                             
                             <div :class="item.count > 0 ? 'text-emerald-400' : 'text-red-500'" 
                                  class="font-bold mt-1 flex items-center gap-1"
-                                 :class="(currentTab === 'xla' || currentTab === 'mxs') ? 'text-xs' : 'text-[8px]'">
+                                 :class="(currentTab === 'xla' || currentTab === 'mxs' || currentTab === 'regulers') ? 'text-xs' : 'text-[8px]'">
                                 Stok: <span x-text="item.count"></span>
                             </div>
 
                             <template x-if="item.count === 0">
                                 <div class="mt-1">
                                     <p class="text-red-500 font-bold italic text-glow-red leading-tight"
-                                       :class="(currentTab === 'xla' || currentTab === 'mxs') ? 'text-[9px]' : 'text-[6px]'">
+                                       :class="(currentTab === 'xla' || currentTab === 'mxs' || currentTab === 'regulers') ? 'text-[9px]' : 'text-[6px]'">
                                         HABIS
                                     </p>
                                 </div>
@@ -331,7 +331,7 @@ to-purple-400
                                 <div class="space-y-0.5">
                                     <template x-for="(val, key) in item.quota_allocation">
                                         <div class="flex justify-between items-center" 
-                                             :class="(currentTab === 'xla' || currentTab === 'mxs') ? 'text-[9px]' : 'text-[6px]'">
+                                             :class="(currentTab === 'xla' || currentTab === 'mxs' || currentTab === 'regulers') ? 'text-[9px]' : 'text-[6px]'">
                                             <span class="text-gray-400 truncate max-w-[40px]" x-text="key"></span>
                                             <span class="text-accent font-mono font-bold" x-text="val + (currentTab === 'mxs' ? '' : ' GB')"></span>
                                         </div>
@@ -342,7 +342,7 @@ to-purple-400
                             <template x-if="!isObject(item.quota_allocation)">
                                 <div class="text-center">
                                     <span class="font-bold text-gray-200" 
-                                          :class="(currentTab === 'xla' || currentTab === 'mxs') ? 'text-xs' : 'text-[10px]'"
+                                          :class="(currentTab === 'xla' || currentTab === 'mxs' || currentTab === 'regulers') ? 'text-xs' : 'text-[10px]'"
                                           x-text="item.quota_allocation"></span> 
                                     <span class="text-gray-500 text-[8px]">
                                         <span x-show="currentTab === 'regulers'">GB</span>
