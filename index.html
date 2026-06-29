@@ -225,22 +225,41 @@ to-purple-400
 
         <div x-show="showMenu"
              x-transition
-             class="glass-panel p-3 rounded-2xl space-y-2 mt-3">
+             class="glass-panel p-3 rounded-2xl mt-3">
 
-            <button class="w-full text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
+            <div class="grid grid-cols-2 gap-2">
+
+            <button class="text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
                 <i class="fa-solid fa-circle-info text-yellow-400"></i>
                 <span>Informasi</span>
             </button>
 
-            <button class="w-full text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
+            <button class="text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
+                <i class="fa-solid fa-globe text-cyan-400"></i>
+                <span>Website Supplier</span>
+            </button>
+
+            <button class="text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
                 <i class="fa-solid fa-phone text-green-400"></i>
                 <span>Hubungi Kami</span>
             </button>
 
-            <button @click="showAbout = true; showMenu = false" class="w-full text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
+            <button class="text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
+                <i class="fa-solid fa-store text-orange-400"></i>
+                <span>Website Reseller</span>
+            </button>
+
+            <button @click="showAbout = true; showMenu = false" class="text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
                 <i class="fa-solid fa-crown text-purple-400"></i>
                 <span>Tentang Kami</span>
             </button>
+
+            <button class="text-left p-3 rounded-xl hover:bg-white/5 transition flex items-center gap-3">
+                <i class="fa-solid fa-screwdriver-wrench text-red-400"></i>
+                <span>Tools</span>
+            </button>
+
+            </div>
 
         </div>
 
